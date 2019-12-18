@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"strconv"
+)
 
 const queen = '♕'
 const box = '☐'
@@ -9,11 +13,29 @@ var simpleSolution = []int{0, 4, 7, 5, 2, 6, 1, 3}
 var demoQueens = [][]int{{0, 1}, {1, 3}, {2, 0}, {3, 2}}
 
 func main() {
-	eightBoard := generateBoard(convertToMatrix(simpleSolution))
-	fourBoard := generateBoard(demoQueens)
+	queens := getQueens(8)
+	solution := nQueens(queens)
+	if solution == nil {
+		fmt.Println("No solution")
+		return
+	}
+	board := generateBoard(convertToMatrix(*solution))
 
-	fmt.Println(eightBoard)
-	fmt.Println(fourBoard)
+	fmt.Println(board)
+}
+
+func getQueens(def int) int {
+	queens := def
+	args := os.Args
+	if len(args) < 2 {
+		return queens
+	}
+	flag := os.Args[1]
+	queens, err := strconv.Atoi(flag)
+	if err != nil {
+		queens = def
+	}
+	return queens
 }
 
 func convertToMatrix(solution []int) (matrix [][]int) {
